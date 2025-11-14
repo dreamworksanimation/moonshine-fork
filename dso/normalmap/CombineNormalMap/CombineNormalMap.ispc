@@ -14,6 +14,7 @@ struct CombineNormalMap
     uniform intptr_t mSampleNormal1Func;
     uniform intptr_t mSampleNormal2Func;
     uniform int mReversedNormalsIndx;
+    uniform bool mValidNormalMaps;
 };
 ISPC_UTIL_EXPORT_UNIFORM_STRUCT_TO_HEADER(CombineNormalMap);
 
@@ -59,15 +60,17 @@ sampleNormal(const uniform NormalMap* uniform  me,
     const uniform CombineNormalMap * uniform cn = NORMALMAP_GET_ISPC_PTR(CombineNormalMap, me);
 
     varying Vec3f sample1 = Vec3f_ctor(0.0f, 0.0f, 0.0f);
-    SampleNormalPtr sampleNormal1fn = (SampleNormalPtr) cn->mSampleNormal1Func;
-    if (sampleNormal1fn != NULL) {
-        sampleNormal1fn(cn->mNormalMap1, tls, &state, &sample1);
-    }
-
     varying Vec3f sample2 = Vec3f_ctor(0.0f, 0.0f, 0.0f);
-    SampleNormalPtr sampleNormal2fn = (SampleNormalPtr) cn->mSampleNormal2Func;
-    if (sampleNormal2fn != NULL) {
-        sampleNormal2fn(cn->mNormalMap2, tls, &state, &sample2);
+    if (cn->mValidNormalMaps) {
+        SampleNormalPtr sampleNormal1fn = (SampleNormalPtr) cn->mSampleNormal1Func;
+        if (sampleNormal1fn != NULL) {
+            sampleNormal1fn(cn->mNormalMap1, tls, &state, &sample1);
+        }
+
+        SampleNormalPtr sampleNormal2fn = (SampleNormalPtr) cn->mSampleNormal2Func;
+        if (sampleNormal2fn != NULL) {
+            sampleNormal2fn(cn->mNormalMap2, tls, &state, &sample2);
+        }
     }
 
     float l1, l2;

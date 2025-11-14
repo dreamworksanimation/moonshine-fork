@@ -65,8 +65,9 @@ CombineNormalMap::update()
                   get(attrInput2)->asA<NormalMap>() :
                   nullptr;
 
-    if (!verifyInputs()) {
-        fatal("CombineNormalMap nor connected properly");
+    mIspc.mValidNormalMaps = verifyInputs();
+    if (!mIspc.mValidNormalMaps) {
+        fatal("CombineNormalMap not connected properly");
         return;
     }
 
@@ -123,14 +124,15 @@ CombineNormalMap::sampleNormal(const NormalMap* self,
 {
     const CombineNormalMap* me = static_cast<const CombineNormalMap*>(self);
 
-
-    MNRY_ASSERT(me->mNormalMap1 != nullptr);
     Vec3f sample1(0.0f);
-    me->mNormalMap1->sampleNormal(tls, state, &sample1);
-
-    MNRY_ASSERT(me->mNormalMap2 != nullptr);
     Vec3f sample2(0.0f);
-    me->mNormalMap2->sampleNormal(tls, state, &sample2);
+    if (me->mIspc.mValidNormalMaps) {
+        MNRY_ASSERT(me->mNormalMap1 != nullptr);
+        me->mNormalMap1->sampleNormal(tls, state, &sample1);
+
+        MNRY_ASSERT(me->mNormalMap2 != nullptr);
+        me->mNormalMap2->sampleNormal(tls, state, &sample2);
+    }
 
     float l1, l2;
     Vec3f n1, n2;
