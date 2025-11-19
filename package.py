@@ -14,7 +14,7 @@ def version():
     """
     Increment the build in the version.
     """
-    _version = '14.33'
+    _version = '14.34'
     from rezbuild import earlybind
     return earlybind.version(this, _version)
 
@@ -81,8 +81,8 @@ for i, variant in enumerate(variants):
     variant.insert(0, '.moonshine_variant-%d' % i)
 
 requires = [
-    'moonray-17.31',
-    'scene_rdl2-15.18',
+    'moonray-17.32',
+    'scene_rdl2-15.19',
 ]
 
 private_build_requires = [
