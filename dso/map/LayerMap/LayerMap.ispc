@@ -77,7 +77,7 @@ subtract(const Color& a, const Color& b, float /*mask*/)
 inline Color
 multiply(const Color& a, const Color& b, float mask)
 {
-    return b * (1.f - mask) + a * b;
+    return b * (1.f - mask) + a * b * mask;
 }
 
 // ----------------
