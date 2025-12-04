@@ -104,7 +104,7 @@ Color subtract(const Color& a, const Color& b)
 // the original color unchanged.
 Color multiply(const Color& a, const Color& b, float mask)
 {
-    return b * (1.f - mask) + a * b * mask;
+    return b * (1.f - mask) + a * b;
 }
 
 // ----------------

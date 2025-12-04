@@ -1,7 +1,7 @@
 // Copyright 2023-2024 DreamWorks Animation LLC
 // SPDX-License-Identifier: Apache-2.0
 
-/// @file LayerMap.ispc
+/// @file LayerMap_v2.ispc
 
 #include "attributes.isph"
 
@@ -27,7 +27,7 @@ enum CompositeMode {
 };
 ISPC_UTIL_EXPORT_ENUM_TO_HEADER(CompositeMode);
 
-/* struct LayerMap */
+/* struct LayerMap_v2 */
 /* { */
 /* }; */
 
@@ -356,5 +356,5 @@ sample(const uniform Map *uniform map,
     return composite(a, b, mask, mode);
 }
 
-DEFINE_MAP_SHADER(LayerMap, sample)
+DEFINE_MAP_SHADER(LayerMap_v2, sample)
 
