@@ -1,7 +1,7 @@
-// Copyright 2023-2024 DreamWorks Animation LLC
+// Copyright 2026 DreamWorks Animation LLC
 // SPDX-License-Identifier: Apache-2.0
 
-/// @file NoiseWorleyMap_v2.ispc
+/// @file NoiseWorleyMap_v3.ispc
 
 #include "attributes.isph"
 
@@ -34,7 +34,7 @@ enum NoiseWorleyMapOutputMode {
 };
 ISPC_UTIL_EXPORT_ENUM_TO_HEADER(NoiseWorleyMapOutputMode);
 
-struct NoiseWorleyMap_v2
+struct NoiseWorleyMap_v3
 {
     const Xform *mXform;
     const NOISE_Worley *mNoise;
@@ -46,7 +46,7 @@ struct NoiseWorleyMap_v2
 
     uniform StaticNoiseWorleyMapData* uniform mNoiseWorleyMapDataPtr;
 };
-ISPC_UTIL_EXPORT_UNIFORM_STRUCT_TO_HEADER(NoiseWorleyMap_v2);
+ISPC_UTIL_EXPORT_UNIFORM_STRUCT_TO_HEADER(NoiseWorleyMap_v3);
 
 static Color
 adjust(float d,
@@ -88,8 +88,8 @@ sample(const uniform Map * uniform map,
        uniform ShadingTLState *uniform tls,
        const State &state)
 {
-    const uniform NoiseWorleyMap_v2 * uniform me =
-        MAP_GET_ISPC_CPTR(NoiseWorleyMap_v2, map);
+    const uniform NoiseWorleyMap_v3 * uniform me =
+        MAP_GET_ISPC_CPTR(NoiseWorleyMap_v3, map);
 
     // Get the position
     varying Vec3f pos;
@@ -250,4 +250,4 @@ sample(const uniform Map * uniform map,
     return noise;
 }
 
-DEFINE_MAP_SHADER(NoiseWorleyMap_v2, sample)
+DEFINE_MAP_SHADER(NoiseWorleyMap_v3, sample)

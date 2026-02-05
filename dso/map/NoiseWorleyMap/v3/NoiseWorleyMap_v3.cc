@@ -1,10 +1,10 @@
-// Copyright 2023-2024 DreamWorks Animation LLC
+// Copyright 2026 DreamWorks Animation LLC
 // SPDX-License-Identifier: Apache-2.0
 
-/// @file NoiseWorleyMap_v2.cc
+/// @file NoiseWorleyMap_v3.cc
 
 #include "attributes.cc"
-#include "NoiseWorleyMap_v2_ispc_stubs.h"
+#include "NoiseWorleyMap_v3_ispc_stubs.h"
 
 #include <moonshine/common/interpolation/Interpolation.h>
 #include <moonray/common/mcrt_macros/moonray_static_check.h>
@@ -23,10 +23,10 @@ static ispc::StaticNoiseWorleyMapData sStaticNoiseWorleyMapData;
 
 //----------------------------------------------------------------------------
 
-RDL2_DSO_CLASS_BEGIN(NoiseWorleyMap_v2, Map)
+RDL2_DSO_CLASS_BEGIN(NoiseWorleyMap_v3, Map)
 public:
-    NoiseWorleyMap_v2(SceneClass const &sceneClass, std::string const &name);
-    ~NoiseWorleyMap_v2();
+    NoiseWorleyMap_v3(SceneClass const &sceneClass, std::string const &name);
+    ~NoiseWorleyMap_v3();
     void update();
 
 private:
@@ -38,19 +38,19 @@ private:
                         moonray::shading::TLState *tls,
                         const moonray::shading::State &state);
 
-    ispc::NoiseWorleyMap_v2 mIspc; // must be the 1st member
+    ispc::NoiseWorleyMap_v3 mIspc; // must be the 1st member
 
     std::unique_ptr<moonray::shading::Xform> mXform;
     std::unique_ptr<noise::Worley> mNoise;
 
-RDL2_DSO_CLASS_END(NoiseWorleyMap_v2)
+RDL2_DSO_CLASS_END(NoiseWorleyMap_v3)
 
 // Constructor
-NoiseWorleyMap_v2::NoiseWorleyMap_v2(SceneClass const &sceneClass, std::string const &name):
+NoiseWorleyMap_v3::NoiseWorleyMap_v3(SceneClass const &sceneClass, std::string const &name):
     Parent(sceneClass, name)
 {
-    mSampleFunc = NoiseWorleyMap_v2::sample;
-    mSampleFuncv = (SampleFuncv) ispc::NoiseWorleyMap_v2_getSampleFunc();
+    mSampleFunc = NoiseWorleyMap_v3::sample;
+    mSampleFuncv = (SampleFuncv) ispc::NoiseWorleyMap_v3_getSampleFunc();
 
     // Store keys to shader data
     mIspc.mRefPKey = moonray::shading::StandardAttributes::sRefP;
@@ -80,12 +80,12 @@ NoiseWorleyMap_v2::NoiseWorleyMap_v2(SceneClass const &sceneClass, std::string c
 }
 
 // Destructor
-NoiseWorleyMap_v2::~NoiseWorleyMap_v2()
+NoiseWorleyMap_v3::~NoiseWorleyMap_v3()
 {
 }
 
 void
-NoiseWorleyMap_v2::update()
+NoiseWorleyMap_v3::update()
 {
     // Get input object and camera
     const Node* geom = get(attrObject) ?
@@ -141,7 +141,7 @@ NoiseWorleyMap_v2::update()
     if (hasChanged(attrSeed)) {
         mNoise = std::make_unique<noise::Worley>(get(attrSeed),
                                                  ispc::NOISE_WORLEY_MAP_TABLE_SIZE,
-                                                 ispc::NOISE_WORLEY_V2,
+                                                 ispc::NOISE_WORLEY_V3,
                                                  get(attrDistanceMethod));
 
         mIspc.mNoise = mNoise->getIspcWorley();
@@ -149,10 +149,10 @@ NoiseWorleyMap_v2::update()
 }
 
 Color
-NoiseWorleyMap_v2::adjust(float d, const Map *self, moonray::shading::TLState *tls,
+NoiseWorleyMap_v3::adjust(float d, const Map *self, moonray::shading::TLState *tls,
     const moonray::shading::State &state)
 {
-    const NoiseWorleyMap_v2 *me = static_cast<const NoiseWorleyMap_v2 *>(self);
+    const NoiseWorleyMap_v3 *me = static_cast<const NoiseWorleyMap_v3 *>(self);
     // Remap
     const Vec2f remapVal =  evalVec2f(self, attrRemap, tls, state);
     float denom = remapVal.y - remapVal.x;
@@ -186,10 +186,10 @@ NoiseWorleyMap_v2::adjust(float d, const Map *self, moonray::shading::TLState *t
 }
 
 void
-NoiseWorleyMap_v2::sample(const Map *self, moonray::shading::TLState *tls,
+NoiseWorleyMap_v3::sample(const Map *self, moonray::shading::TLState *tls,
     const moonray::shading::State &state, Color *sample)
 {
-    const NoiseWorleyMap_v2 *me = static_cast<const NoiseWorleyMap_v2 *>(self);
+    const NoiseWorleyMap_v3 *me = static_cast<const NoiseWorleyMap_v3 *>(self);
 
     // Retrieve position
     Vec3f pos;

@@ -1,5 +1,5 @@
 {
-    "name": "NoiseWorleyMap_v2",
+    "name": "NoiseWorleyMap_v3",
     "type": "Map",
     "attributes": {
         "attrSeed": {
@@ -230,7 +230,7 @@
             "flags": "FLAGS_BINDABLE",
             "comment": "Vector to scale the noise non-proportionally",
             "group": "Transform"
-	},
+        },
         "attrRotation": {
             "name": "rotation",
             "type": "Vec3f",
